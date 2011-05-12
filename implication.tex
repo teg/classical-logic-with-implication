@@ -1,8 +1,8 @@
-\documentclass[a4paper]{llncs}
+\documentclass[a4paper]{article}
 
 \usepackage[lutzsyntax]{virginialake}
-\usepackage[urw-garamond]{mathdesign} % Comment this to use Times fonts
-  \expandafter\ifx\csname leqslant\endcsname\relax\usepackage{txfonts}\fi
+%\usepackage[urw-garamond]{mathdesign} % Comment this to use Times fonts
+%  \expandafter\ifx\csname leqslant\endcsname\relax\usepackage{txfonts}\fi
 \usepackage[pdfborder={0 0 0}]{hyperref}
 %\usepackage[dvipsnames,usenames]{color}
 %\usepackage{draftwatermark}
@@ -18,51 +18,82 @@
 
 \begin{document}
 
-\title{Implication in Classical Logic}
+\title{Strongly Normalising Explicit Substitution for Intuitionistic and Classical Logic}
 
-\author{Tom Gundersen}
-
-\institute{University of Bath, Bath BA2 7AY, UK}
+\author{Tom Gundersen and Michel Parigot}
 
 \maketitle
 
-
-\newcommand{\inte}{\mathsf{i}}
-\newcommand{\wea  }{\mathsf{w}}
-\newcommand{\con  }{\mathsf{c}}
-\newcommand{\wead }{{\wea{\downarrow}}}
-\newcommand{\cond }{{\con{\downarrow}}}
-\newcommand{\weau }{{\wea{\uparrow}}}
-\newcommand{\conu }{{\con{\uparrow}}}
-\newcommand{\swi  }{\mathsf{s}}
-\newcommand{\swio }{\mathsf{s_1}}
-\newcommand{\swit }{\mathsf{s_2}}
-\newcommand{\asso }{\mathsf{as}}
-
 \[
-\vlinf{\swi }{}{\vls[(\alpha.\beta).\gamma]}{\vls(\alpha.[\beta.\gamma])}\qquad
-\vlinf{\swio}{}{\vls(\beta\vlim(\alpha.\gamma))}{\vls(\alpha.(\beta\vlim\gamma))}\qquad
-\vlinf{\swit}{}{\vls((\alpha\vlim\beta)\vlim\gamma)}{\vls(\alpha.(\beta\vlim\gamma))}\qquad
-\vlinf{\asso}{}{\vls[(\alpha\vlim\beta).\gamma]}{\vls(\alpha\vlim[\beta.\gamma])}
+\vlinf{}{}{\top}{A}\qquad
+\vlinf{}{}{\vls(A.A)}{A}\qquad
+\vlinf{}{}{\vls([A\vlim B].[A\vlim C])}{\vls[A\vlim(B.C)]}\qquad
+\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\vlim B}{\Delta})}\qquad
+\vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma}\qquad
 \]
 
 \[
-\vlinf{\cond}{}{\alpha}{\vls[\alpha.\alpha]}\qquad
-\vlinf{\conu}{}{\vls(\alpha.\alpha)}{\alpha}\qquad
-\vlinf{\wead}{}{\alpha}{\bot}\qquad
-\vlinf{\weau}{}{\top}{\alpha}\qquad
-\vlinf{\inte}{}{\vls(\alpha\vlim\alpha)}{\top}
+\vlinf{}{}{\vls(A\;.\;\vlinf{}{}{\top}{A})}{A}
+\quad\rightarrow\quad
+A\qquad
+\vlinf{}{}{\vls([A\vlim B]\;.\;\vlinf{}{}{\top}{[A\vlim C]})}{\vls[A\vlim(B.C)]}
+\quad\rightarrow\quad
+\vls[A\vlim(B\;.\;\vlinf{}{}{\top}{C})]
+\]
+\[
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{\vls(A.A)}{\vlhy{A}}
+  }
+}\quad\rightarrow\quad
+\vlinf{}{}{\top}{A}\qquad
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{\vls([A\vlim B].[A\vlim C])}{\vlhy{\vls[A\vlim(B.C)]}}
+  }
+}\quad\rightarrow\quad
+\vlinf{}{}{\top}{\vls[A\vlim(B.C)]}\qquad
+\]
+\[
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{B}{\vlhy{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\vlim B}{\Delta})}}
+  }
+}\quad\rightarrow\quad
+\vls(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A}{\vlhy{\Gamma}}}}\;\;.\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A\vlim B}{\vlhy{\Delta}}}})
+\qquad
+\]
+\[
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\vlhy\Gamma}
+  }
+}\quad\rightarrow^\star\quad
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{A\;\;\vlim\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{}{B}{\vlhy{\vls(A.\Gamma)}}}}}{\vlhy\Gamma}
+  }
+}\qquad
+\vlderivation
+{
+  \vlin{}{}{\top}
+  {
+    \vlin{}{}{A\;\;\vlim\;\;\vlinf{}{}{\top}{\vls(A.\Gamma)}}{\vlhy\Gamma}
+  }
+}\quad\rightarrow\quad
+\vlinf{}{}{\top}{\Gamma}\qquad
 \]
 
-We compose derivations by concatenation and by logical connectives; if $\vlder{\Phi}{}{\beta}{\alpha}$ and $\vlder{\Psi}{}{\delta}{\gamma}$ are derivations then so are
-$\vlder{\vls(\Phi.\Psi)}{}{\vls(\beta.\delta)}{\vls(\alpha.\gamma)}$, $\vlder{\vls[\Phi.\Psi]}{}{\vls[\beta.\delta]}{\vls[\alpha.\gamma]}$ and $\vlder{\vls(\Phi\vlim\Psi)}{}{\vls(\alpha\vlim\delta)}{\vls(\beta\vlim\gamma)}$. Note how derivations (\emph{i.e.} inference rules) are flipped upside down in a negative context.
-
-It can be seen that the system is implicationally complete by translating in the obvious way from the two-sided sequent calculus. Each rule is a valid implication in classical logic.
-
-Very vague: For the following conjecture to work we need to track the atomic flow of $\bot$, we don't care about $\top$ (I think). We need to (sometimes) create $\bot$'s using interactions and cuts (I think).
-
-We say that $\alpha$ depends on $\beta$ in $\Phi$ if they are subformulae of the same formula and there is a directed path in the atomic flow associated with $\Phi$ from (an atom occurrence in) $\alpha$ to (an atom occurrence in) $\beta$.
-
-We conjecture that if there is a derivation $\Phi$ from $\alpha'$ to $\beta'$ in the above system such that for every instance of the rule `$\asso$' $\beta$ depends on $\alpha$ and $\gamma$ does not, then $\alpha'\vlim\beta'$ is intuitionistically valid.
+$\star$) $B\neq\top$.
 
 \end{document}
