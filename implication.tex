@@ -24,6 +24,23 @@
 
 \maketitle
 
+A `path' through an atomic flow is the traditional `ai-path' (i.e. we dissalow the two `up' (resp., `down') edges of a (co)contraction from being adjacent), with the following restriction:
+
+For every medial instance
+\[
+\vlinf{}{}
+{\vls([A.C].[B.D])}
+{\vls[(A.B).(C.D)]}
+\]
+every path that passes through both A and D or both B and C are discarded.
+
+\begin{itemize}
+\item Theorem: the `tamer' of `Breaking Paths...' preserves these kind of paths (it has been keeping me up at night that the tamer does not preserve the normal paths ever since I first noticed it back in Bath).
+\item (Very strong) conjucture: These paths are preserved by $\beta$-reduction (in both $\lambda$ and $\lambda\mu$ calculus)
+\item Conjecture (working exactly what I have been trying to prove with Lutz): any flow where all these paths are acyclic* corresponds to a valid classical logic proof (and a suitable restriction will give a intutionistic logic proof).
+\end{itemize}
+*) we do as Retore and we connecte edges that are in disjunctions (resp., conjuncions) in the premiss (resp., conclusion).
+
 \[
 \vlinf{}{}{\top}{A}\qquad
 \vlinf{}{}{\vls(A.A)}{A}\qquad
@@ -38,7 +55,12 @@
 A\qquad
 \vlinf{}{}{\vls([A\vlim B]\;.\;\vlinf{}{}{\top}{[A\vlim C]})}{\vls[A\vlim(B.C)]}
 \quad\rightarrow\quad
-\vls[A\vlim(B\;.\;\vlinf{}{}{\top}{C})]
+\vls[A\vlim(B\;.\;\vlinf{}{}{\top}{C})]\qquad
+\]
+\[
+\vlinf{}{}{\vls([A\vlim B]\;.\;[A\vlim \vlinf{}{}{\top}{C}])}{\vls[A\vlim(B.C)]}
+\quad\rightarrow\quad
+\vlinf{}{}{\vls([A\vlim B]\;.\;[A\vlim \top])}{\vls[A\vlim(B.\vlinf{}{}{\top}{C})]}
 \]
 \[
 \vlderivation
