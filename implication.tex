@@ -23,31 +23,44 @@
 \author{Tom Gundersen and Michel Parigot}
 
 \maketitle
+% 
+% A `path' through an atomic flow is the traditional `ai-path' (i.e. we dissalow the two `up' (resp., `down') edges of a (co)contraction from being adjacent), with the following restriction:
+% 
+% For every medial instance
+% \[
+% \vlinf{}{}
+% {\vls([A.C].[B.D])}
+% {\vls[(A.B).(C.D)]}
+% \]
+% every path that passes through both A and D or both B and C are discarded.
+% 
+% \begin{itemize}
+% \item Theorem: the `tamer' of `Breaking Paths...' preserves these kind of paths (it has been keeping me up at night that the tamer does not preserve the normal paths ever since I first noticed it back in Bath).
+% \item (Very strong) conjucture: These paths are preserved by $\beta$-reduction (in both $\lambda$ and $\lambda\mu$ calculus)
+% \item Conjecture (working exactly what I have been trying to prove with Lutz): any flow where all these paths are acyclic* corresponds to a valid classical logic proof (and a suitable restriction will give a intutionistic logic proof).
+% \end{itemize}
+% *) we do as Retore and we connecte edges that are in disjunctions (resp., conjuncions) in the premiss (resp., conclusion).
 
-A `path' through an atomic flow is the traditional `ai-path' (i.e. we dissalow the two `up' (resp., `down') edges of a (co)contraction from being adjacent), with the following restriction:
-
-For every medial instance
-\[
-\vlinf{}{}
-{\vls([A.C].[B.D])}
-{\vls[(A.B).(C.D)]}
-\]
-every path that passes through both A and D or both B and C are discarded.
-
-\begin{itemize}
-\item Theorem: the `tamer' of `Breaking Paths...' preserves these kind of paths (it has been keeping me up at night that the tamer does not preserve the normal paths ever since I first noticed it back in Bath).
-\item (Very strong) conjucture: These paths are preserved by $\beta$-reduction (in both $\lambda$ and $\lambda\mu$ calculus)
-\item Conjecture (working exactly what I have been trying to prove with Lutz): any flow where all these paths are acyclic* corresponds to a valid classical logic proof (and a suitable restriction will give a intutionistic logic proof).
-\end{itemize}
-*) we do as Retore and we connecte edges that are in disjunctions (resp., conjuncions) in the premiss (resp., conclusion).
+\paragraph{Rules}
 
 \[
 \vlinf{}{}{\top}{A}\qquad
 \vlinf{}{}{\vls(A.A)}{A}\qquad
 \vlinf{}{}{\vls([A\vlim B].[A\vlim C])}{\vls[A\vlim(B.C)]}\qquad
-\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\vlim B}{\Delta})}\qquad
+\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlder{}{}{A\vlim B}{\Gamma})}\qquad
 \vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma}\qquad
 \]
+
+
+\paragraph{Interaction}
+
+\[
+\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma})}
+\quad\rightarrow\quad
+\vlder{}{}{B}{\vlsbr(\vlder{}{}{A}{\Delta}\;\;.\;\;\Gamma)}
+\]
+
+\paragraph{Weakening}
 
 \[
 \vlinf{}{}{\vls(A\;.\;\vlinf{}{}{\top}{A})}{A}
@@ -58,29 +71,6 @@ A\qquad
 \vls[A\vlim(B\;.\;\vlinf{}{}{\top}{C})]\qquad
 \]
 \[
-\vlinf{}{}{\vls([A\vlim B]\;.\;[A\vlim \vlinf{}{}{\top}{C}])}{\vls[A\vlim(B.C)]}
-\quad\rightarrow\quad
-\vlinf{}{}{\vls([A\vlim B]\;.\;[A\vlim \top])}{\vls[A\vlim(B.\vlinf{}{}{\top}{C})]}
-\]
-\[
-\vlderivation
-{
-  \vlin{}{}{\top}
-  {
-    \vlin{}{}{\vls(A.A)}{\vlhy{A}}
-  }
-}\quad\rightarrow\quad
-\vlinf{}{}{\top}{A}\qquad
-\vlderivation
-{
-  \vlin{}{}{\top}
-  {
-    \vlin{}{}{\vls([A\vlim B].[A\vlim C])}{\vlhy{\vls[A\vlim(B.C)]}}
-  }
-}\quad\rightarrow\quad
-\vlinf{}{}{\top}{\vls[A\vlim(B.C)]}\qquad
-\]
-\[
 \vlderivation
 {
   \vlin{}{}{\top}
@@ -88,8 +78,7 @@ A\qquad
     \vlin{}{}{B}{\vlhy{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\vlim B}{\Delta})}}
   }
 }\quad\rightarrow\quad
-\vls(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A}{\vlhy{\Gamma}}}}\;\;.\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A\vlim B}{\vlhy{\Delta}}}})
-\qquad
+\vlinf{}{}{\top}{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\;\vlim\;\vlinf{}{}{\top}{B}}{\Delta})}
 \]
 \[
 \vlderivation
@@ -118,4 +107,31 @@ A\qquad
 
 $\star$) $B\neq\top$.
 
+\paragraph{Contraction}
+
+\[
+\vlderivation
+{
+  \vlin{}{}{\vls(B.B)}
+  {
+    \vlin{}{}{B}{\vlhy{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\vlim B}{\Delta})}}
+  }
+}\quad\rightarrow\quad
+\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Gamma}\;\;.\;\;\vlder{}{}{A\;\vlim\;\vlinf{}{}{\vls(B.B)}{B}}{\Delta})}
+\]
+\[
+\vlinf{}{}{\vls([A\vlim B].[A\vlim B])}{A\vlim B}
+\quad\rightarrow\quad
+\vlinf{}{}{\vls([A\vlim B].[A\vlim B])}{A\;\vlim\;\vlinf{}{}{\vls(B.B)}{B}}
+\]
+\[
+\vlderivation
+{
+  \vlin{}{}{\vls([A\vlim B].[A\vlim C])}
+  {
+    \vlin{}{}{A\;\;\vlim\;\;\vlinf{}{}{\vls(\vlder{}{}{B}{\vls(A.\Gamma)}\;\;.\;\;\vlder{}{}{C}{\vls(A.\Gamma)})}{\vls(A.\Gamma)}}{\vlhy\Gamma}
+  }
+}\quad\rightarrow\quad
+\vlinf{}{}{\vls(\vlinf{}{}{\vls[A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}]}{\Gamma}\;\;.\;\;\vlinf{}{}{\vls[A\;\;\vlim\;\;\vlder{}{}{C}{\vls(A.\Gamma)}]}{\Gamma})}{\Gamma}\qquad
+\]
 \end{document}
