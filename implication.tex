@@ -65,12 +65,12 @@ Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is de
  \item $\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlder{}{}{A\vlim B}{\Gamma})}$
  \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
  \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A.A)}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
-%\vlinf{}{}{\top}{A}
-%\vlinf{}{}{\vls(A.A)}{A}\qquad
-%\vlinf{}{}{\vls([A\vlim B].[A\vlim C])}{\vls[A\vlim(B.C)]}\qquad
+ \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlin{}{}{A\;\;\vlim\;\;\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A_1}{\vlhy{\vls(A.\Gamma_1)}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A_n}{\vlhy{\Gamma_n}}}})}{\vlhy{\vls(\Gamma_1.\cdots.\Gamma_n)}}}}\;\;\;.\;\;\;\Delta)}$
+ \item $\vlder{}{}{B}{\vlinf{}{}{\vls([A\vlim B_1].[A\vlim B_2])}
+{\vlinf{}{}{A\;\;\;\;\;\;\;\vlim\;\;\;\;\;\;\;
+\vlinf{=}{}{\vls(\vlder{}{}{B_1}{\Delta_1}\;\;.\;\;\vlder{}{}{B_2}{\Delta_2})}{\vlinf{=}{}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A_1.A_1)}{\vlde{}{}{A_1}{\vlhy{\Gamma_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\vls(A_n.A_n)}{\vlde{}{}{A_n}{\vlhy{\Gamma_n}}}}\;\;\;.\;\;\;\Delta)}{\vls(A.\Gamma)}}
+}{\Gamma}}}$
 \end{itemize}
-
-With the added restriction that a $\top$ or a meta-level conjunction (resp., implication) can never occur in the conclusion (resp., premiss) of a derivation.
 
 \paragraph{Reduction}
 
@@ -83,6 +83,8 @@ With the added restriction that a $\top$ or a meta-level conjunction (resp., imp
  \item $u[x_1,x_2\leftarrow (\lambda y.t)] \rightsquigarrow u[x_1,x_2\leftarrow (\lambda y.<y_1,y_2>[y_1,y_2\leftarrow t])]$
  \item $u[x_1,x_2\leftarrow (\lambda y.<t_1,t_2>[y_1,y_2\leftarrow y])] \rightsquigarrow u\{x_1\leftarrow \lambda y_1.t_1, x_2\leftarrow \lambda y_2.t_2\}$
 \end{itemize}
+
+\end{document}
 
 \paragraph{Interaction}
 
