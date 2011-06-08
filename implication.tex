@@ -49,10 +49,9 @@
  \item $x$
  \item $\lambda x.u, x\in\FV(u)$
  \item $(u)t, \FV(u)\cap\FV(t)=\emptyset$
- \item $u[\leftarrow t]$
- \item $u[x_1,x_2\leftarrow t], x_1,x_2\not\in\FV(t), x_1,x_2\in\FV(u), \FV(u)\cap\FV(t)=\emptyset$
- \item $u[\leftarrow \lambda x.\epsilon[\leftarrow t_1]\dots[\leftarrow t_n]]$
- \item $u[x_1,x_2\leftarrow \lambda y.<v_1,v_2>[y_1,z_1\leftarrow t_1]\dots[y_n,z_n\leftarrow t_n]], \FV(v_1)\cap\FV(v_2)=\emptyset, y_1,\dots,y_n\in\FV(v_1),z_1,\dots,z_n\in\FV(v_2)$
+ \item $u[x_1,y_1\leftarrow t_1;\dots;x_n,y_n\leftarrow t_n;\leftarrow t'_1;\dots;\leftarrow t'_m], x_1,y_1,\dots,x_n,y_n\not\in\FV(t_1)\cup\dots\cup\FV(t_n)\cup\FV(t'_1)\cup\dots\cup\FV(t'_m), x_1,y_1,\dots,x_n,y_n\in\FV(u), \FV(u)\cap(\FV(t_1)\cup\dots\cup\FV(t_n)\cup\FV(t'_1)\cup\dots\cup\FV(t'_m))=\emptyset$
+ \item $u[\leftarrow \lambda x.\epsilon[\leftarrow t_1;\dots;\leftarrow t_n]]$
+ \item $u[x_1,x_2\leftarrow \lambda y.<v_1,v_2>[y_1,z_1\leftarrow t_1;\dots;y_n,z_n\leftarrow t_n]], \FV(v_1)\cap\FV(v_2)=\emptyset, y_1,\dots,y_n\in\FV(v_1),z_1,\dots,z_n\in\FV(v_2)$
 \end{itemize}
 
 Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is defined modulo $\alpha$-conversion to avoid capturing variables, as is the norm.
@@ -60,16 +59,15 @@ Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is de
 \paragraph{Typing}
 
 \begin{itemize}
- \item $A$
- \item $\vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma}$
- \item $\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlder{}{}{A\vlim B}{\Gamma})}$
- \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
- \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A.A)}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
- \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlin{}{}{A\;\;\vlim\;\;\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A_1}{\vlhy{\vls(A.\Gamma_1)}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A_n}{\vlhy{\Gamma_n}}}})}{\vlhy{\vls(\Gamma_1.\cdots.\Gamma_n)}}}}\;\;\;.\;\;\;\Delta)}$
- \item $\vlder{}{}{B}{\vlinf{}{}{\vls([A\vlim B_1].[A\vlim B_2])}
-{\vlinf{}{}{A\;\;\;\;\;\;\;\vlim\;\;\;\;\;\;\;
-\vlinf{=}{}{\vls(\vlder{}{}{B_1}{\Delta_1}\;\;.\;\;\vlder{}{}{B_2}{\Delta_2})}{\vlinf{=}{}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A_1.A_1)}{\vlde{}{}{A_1}{\vlhy{\Gamma_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\vls(A_n.A_n)}{\vlde{}{}{A_n}{\vlhy{\Gamma_n}}}}\;\;\;.\;\;\;\Delta)}{\vls(A.\Gamma)}}
-}{\Gamma}}}$
+ \item $A^x$
+ \item $\vlinf{}{}{A^x\;\;\vlim\;\;\vlder{}{u}{B}{\vls(A.\Gamma)}}{\Gamma}$
+ \item $\vlinf{}{}{B}{\vls(\vlder{}{t}{A}{\Delta}\;\;.\;\;\vlder{}{u}{A\vlim B}{\Gamma})}$
+ \item $\vlder{}{u}{B}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A^{x_1}_1.A^{y_1}_1)}{\vlde{}{t_1}{A_1}{\vlhy{\Gamma_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\vls(A^{x_n}_n.A^{y_n}_n)}{\vlde{}{t_n}{A_n}{\vlhy{\Gamma_n}}}}\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{t'_1}{A'_1}{\vlhy{\Gamma'_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{t'_m}{A'_m}{\vlhy{\Gamma'_m}}}}\;\;\;.\;\;\;\Delta)}$
+ \item $\vlder{}{u}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlin{}{}{A^x\;\;\vlim\;\;\vlinf{=}{}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{t_1}{A_1}{\vlhy{\Gamma_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\top}{\vlde{}{t_n}{A_n}{\vlhy{\Gamma_n}}}})}{\vls(A.\Gamma)}}{\vlhy{\Gamma}}}}\;\;\;.\;\;\;\Delta)}$
+ \item $\vlder{}{u}{B}{\vlsbr(\vlinf{}{}{\vls([A\vlim B_1]^{x_1}.[A\vlim B_2]^{x_2})}
+{\vlinf{}{}{A^y\;\;\;\;\;\;\;\vlim\;\;\;\;\;\;\;
+\vlinf{=}{}{\vls(\vlder{}{v_1}{B_1}{\Delta_1}\;\;.\;\;\vlder{}{v_2}{B_2}{\Delta_2})}{\vlinf{=}{}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A^{y_1}_1.A^{z_1}_1)}{\vlde{}{t_1}{A_1}{\vlhy{\Gamma_1}}}}\;\;\;.\;\;\;\cdots\;\;\;.\;\;\;\vlderivation{\vlin{}{}{\vls(A^{y_1}_n.A^{z_1}_n)}{\vlde{}{t_1}{A_n}{\vlhy{\Gamma_n}}}}\;\;\;.\;\;\;\Delta')}{\vls(A.\Gamma)}}
+}{\Gamma}}\;\;\;\;\;\;\;.\;\;\;\;\;\;\;\Delta)}$
 \end{itemize}
 
 \paragraph{Reduction}
