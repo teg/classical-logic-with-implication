@@ -7,6 +7,7 @@
 %\usepackage[dvipsnames,usenames]{color}
 %\usepackage{draftwatermark}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \hyphenation{co-weak-en-ing}
 \hyphenation{La-mar-che}
@@ -41,17 +42,47 @@
 % \end{itemize}
 % *) we do as Retore and we connecte edges that are in disjunctions (resp., conjuncions) in the premiss (resp., conclusion).
 
-\paragraph{Rules}
+\newcommand{\FV}{\mathop{FV}}
 
-\[
-\vlinf{}{}{\top}{A}\qquad
-\vlinf{}{}{\vls(A.A)}{A}\qquad
-\vlinf{}{}{\vls([A\vlim B].[A\vlim C])}{\vls[A\vlim(B.C)]}\qquad
-\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlder{}{}{A\vlim B}{\Gamma})}\qquad
-\vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma}\qquad
-\]
+\paragraph{Terms}
+\begin{itemize}
+ \item $x$
+ \item $\lambda x.u, x\in\FV(u)$
+ \item $(u)t, \FV(u)\cap\FV(t)=\emptyset$
+ \item $u[\leftarrow t]$
+ \item $u[x_1,x_2\leftarrow t], x_1,x_2\not\in\FV(t), x_1,x_2\in\FV(u), \FV(u)\cap\FV(t)=\emptyset$
+ \item $u[\leftarrow \lambda x.\epsilon[\leftarrow t_1]\dots[\leftarrow t_n]]$
+ \item $u[x_1,x_2\leftarrow \lambda y.<v_1,v_2>[y_1,z_1\leftarrow t_1]\dots[y_n,z_n\leftarrow t_n]], \FV(v_1)\cap\FV(v_2)=\emptyset, y_1,\dots,y_n\in\FV(v_1),z_1,\dots,z_n\in\FV(v_2)$
+\end{itemize}
+
+Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is defined modulo $\alpha$-conversion to avoid capturing variables, as is the norm.
+
+\paragraph{Typing}
+
+\begin{itemize}
+ \item $A$
+ \item $\vlinf{}{}{A\;\;\vlim\;\;\vlder{}{}{B}{\vls(A.\Gamma)}}{\Gamma}$
+ \item $\vlinf{}{}{B}{\vls(\vlder{}{}{A}{\Delta}\;\;.\;\;\vlder{}{}{A\vlim B}{\Gamma})}$
+ \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\top}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
+ \item $\vlder{}{}{B}{\vlsbr(\vlderivation{\vlin{}{}{\vls(A.A)}{\vlde{}{}{A}{\vlhy\Gamma}}}\;\;\;.\;\;\;\Delta)}$
+%\vlinf{}{}{\top}{A}
+%\vlinf{}{}{\vls(A.A)}{A}\qquad
+%\vlinf{}{}{\vls([A\vlim B].[A\vlim C])}{\vls[A\vlim(B.C)]}\qquad
+\end{itemize}
 
 With the added restriction that a $\top$ or a meta-level conjunction (resp., implication) can never occur in the conclusion (resp., premiss) of a derivation.
+
+\paragraph{Reduction}
+
+\begin{itemize}
+ \item $(\lambda x.u)t \rightsquigarrow u\{x\leftarrow t\}$
+ \item $u[\leftarrow x_1][x_1,x_2\leftarrow t] \rightsquigarrow u\{x_2\leftarrow t\}$
+ \item $\lambda x.(u[y_1,y_2\leftarrow t]) \rightsquigarrow (\lambda x.u)[y_1,y_2\leftarrow t], x\not\in\FV(t)$
+ \item $u[\leftarrow (\lambda x.t)] \rightsquigarrow u[\leftarrow (\lambda x.\epsilon[\leftarrow t])]$
+ \item $u[\leftarrow (\lambda x.\epsilon[\leftarrow x])] \rightsquigarrow u$
+ \item $u[x_1,x_2\leftarrow (\lambda y.t)] \rightsquigarrow u[x_1,x_2\leftarrow (\lambda y.<y_1,y_2>[y_1,y_2\leftarrow t])]$
+ \item $u[x_1,x_2\leftarrow (\lambda y.<t_1,t_2>[y_1,y_2\leftarrow y])] \rightsquigarrow u\{x_1\leftarrow \lambda y_1.t_1, x_2\leftarrow \lambda y_2.t_2\}$
+\end{itemize}
 
 \paragraph{Interaction}
 
