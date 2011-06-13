@@ -7,7 +7,10 @@
 %\usepackage[dvipsnames,usenames]{color}
 %\usepackage{draftwatermark}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{a4wide}
 
 \hyphenation{co-weak-en-ing}
 \hyphenation{La-mar-che}
@@ -49,10 +52,13 @@
  \item $x$
  \item $\lambda x.u, x\in\FV(u)$
  \item $(u)t, \FV(u)\cap\FV(t)=\emptyset$
- \item $u[x_1,y_1\leftarrow t_1;\dots;x_n,y_n\leftarrow t_n;\leftarrow t'_1;\dots;\leftarrow t'_m], x_1,y_1,\dots,x_n,y_n\not\in\FV(t_1)\cup\dots\cup\FV(t_n)\cup\FV(t'_1)\cup\dots\cup\FV(t'_m), x_1,y_1,\dots,x_n,y_n\in\FV(u), \FV(u)\cap(\FV(t_1)\cup\dots\cup\FV(t_n)\cup\FV(t'_1)\cup\dots\cup\FV(t'_m))=\emptyset$
- \item $u[\leftarrow \lambda x.\epsilon[\leftarrow t_1;\dots;\leftarrow t_n]]$
- \item $u[x_1,x_2\leftarrow \lambda y.<v_1,v_2>[y_1,z_1\leftarrow t_1;\dots;y_n,z_n\leftarrow t_n]], \FV(v_1)\cap\FV(v_2)=\emptyset, y_1,\dots,y_n\in\FV(v_1),z_1,\dots,z_n\in\FV(v_2)$
+ \item $u[\leftarrow t], \FV(u)\cap\FV(t)=\emptyset$
+ \item $u[x,y\leftarrow t], \FV(u)\cap\FV(t)=\emptyset, x,y\in\FV(u)$
+ \item $u[\leftarrow \lambda x.\epsilon[\vec x_1\leftarrow t_1]\dots[\vec x_n\leftarrow t_n]], \mbox{same conditions apply}$
+ \item $u[z_1,z_2\leftarrow \lambda y.<v_1,v_2>[\vec x_1\leftarrow t_1]\dots[\vec x_2\leftarrow t_n]], \mbox{same conditions apply}$
 \end{itemize}
+
+where $\vec x_i$ stands for either two variables or no variables.
 
 Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is defined modulo $\alpha$-conversion to avoid capturing variables, as is the norm.
 
@@ -70,17 +76,63 @@ Substitution, which is always linear, is denoted $u\{x\leftarrow t\}$, and is de
 }{\Gamma}}\;\;\;\;\;\;\;.\;\;\;\;\;\;\;\Delta)}$
 \end{itemize}
 
+\paragraph{Denotation}
+\begin{itemize}
+ \item $\llbracket x\rrbracket=x$
+ \item $\llbracket\lambda x.u\rrbracket=\lambda x.\llbracket u\rrbracket$
+ \item $\llbracket(u)t\rrbracket = (\llbracket u\rrbracket)\llbracket t\rrbracket$
+ \item $\llbracket u[\leftarrow t]\rrbracket = \llbracket u\rrbracket$
+ \item $\llbracket u[x,y\leftarrow t]\rrbracket = \llbracket u\rrbracket\{x,y\leftarrow\llbracket t\rrbracket\}$
+ \item $\llbracket u[\leftarrow \lambda x.\epsilon[\vec x_1\leftarrow t_1]\dots[\vec x_n\leftarrow t_n]]\rrbracket = \llbracket u\rrbracket$
+ \item $\llbracket u[z_1,z_2\leftarrow \lambda y.<v_1,v_2>[\vec x_1\leftarrow t_1]\dots[\vec x_2\leftarrow t_n]]\rrbracket=\llbracket u\rrbracket\{z_1\leftarrow \lambda y.\llbracket v_1\rrbracket\{\vec x_1\leftarrow \llbracket t_1\rrbracket\}\dots\{\vec x_2\leftarrow \llbracket t_n\rrbracket\}\}\{z_2\leftarrow \lambda y.\llbracket v_2\rrbracket\{\vec x_1\leftarrow \llbracket t_1\rrbracket\}\dots\{\vec x_2\leftarrow \llbracket t_n\rrbracket\}\}$
+\end{itemize}
+
 \paragraph{Reduction}
 
 \begin{itemize}
- \item $(\lambda x.u)t \rightsquigarrow u\{x\leftarrow t\}$
- \item $u[\leftarrow x_1][x_1,x_2\leftarrow t] \rightsquigarrow u\{x_2\leftarrow t\}$
- \item $\lambda x.(u[y_1,y_2\leftarrow t]) \rightsquigarrow (\lambda x.u)[y_1,y_2\leftarrow t], x\not\in\FV(t)$
- \item $u[\leftarrow (\lambda x.t)] \rightsquigarrow u[\leftarrow (\lambda x.\epsilon[\leftarrow t])]$
- \item $u[\leftarrow (\lambda x.\epsilon[\leftarrow x])] \rightsquigarrow u$
- \item $u[x_1,x_2\leftarrow (\lambda y.t)] \rightsquigarrow u[x_1,x_2\leftarrow (\lambda y.<y_1,y_2>[y_1,y_2\leftarrow t])]$
- \item $u[x_1,x_2\leftarrow (\lambda y.<t_1,t_2>[y_1,y_2\leftarrow y])] \rightsquigarrow u\{x_1\leftarrow \lambda y_1.t_1, x_2\leftarrow \lambda y_2.t_2\}$
+ \item $(\lambda x.u)t \rightsquigarrow_\beta u\{x\leftarrow t\}$
 \end{itemize}
+
+$u[\leftarrow t] \rightsquigarrow_w^\star u[\leftarrow x_1]\dots[\leftarrow x_n], \{x_1,\dots,x_n\}=\FV(t)$
+\begin{itemize}
+ \item $u[\leftarrow \lambda x.t] \rightsquigarrow_w u[\leftarrow \lambda x.\epsilon[\leftarrow t]]$
+ \item $u[\leftarrow (t)v] \rightsquigarrow_w u[\leftarrow t][\leftarrow v]$
+ \item $u[\leftarrow t[\leftarrow v]] \rightsquigarrow_w u[\leftarrow t][\leftarrow v]$
+ \item $u[\leftarrow t[x,y\leftarrow v]] \rightsquigarrow_w u[\leftarrow t][x,y\leftarrow v]$
+ \item $u[\leftarrow x][z,y\leftarrow t] \rightsquigarrow_w u[z,y\leftarrow t][\leftarrow x]$
+ \item $u[\leftarrow x][x,y\leftarrow t] \rightsquigarrow_w u\{y\leftarrow t\}$
+ \item $\lambda x.(u[\leftarrow y][\leftarrow x]) \rightsquigarrow_w \lambda x.(u[\leftarrow x][\leftarrow y])$
+ \item $\lambda x.(u[\leftarrow y]) \rightsquigarrow_w (\lambda x.u)[\leftarrow y]$
+ \item $u[\leftarrow (\lambda x.\epsilon[\leftarrow x])] \rightsquigarrow_w u$
+\end{itemize}
+
+$u[x,y\leftarrow t] \rightsquigarrow_c^\star u\{x\leftarrow t'\}\{y\leftarrow t''\}[x_1,y_1\leftarrow z_1]\dots[x_1,y_1\leftarrow z_n], \{x_1,\dots,x_n\}=\FV(t'), \{y_1,\dots,y_n\}=\FV(t''), \{z_1,\dots,z_n\}=\FV(t), t=_\alpha t'=_\alpha =t''$
+\begin{itemize}
+ \item $u[z_1,z_2\leftarrow \lambda y.t] \rightsquigarrow_c u[z_1,z_2\leftarrow \lambda y.<x_1,x_2>[x_1,x_2\leftarrow t]]$
+ \item $u[x_1,x_2\leftarrow (t)v] \rightsquigarrow_c u\{x_1\leftarrow (y_1)z_1\}\{x_2\leftarrow (y_2)z_2\}[y_1,y_2\leftarrow t][z_1,z_2\leftarrow v]$
+ \item $u[x,y\leftarrow t[\leftarrow v]] \rightsquigarrow_c u[x,y\leftarrow t][\leftarrow v]$
+ \item $u[x_1,x_2\leftarrow t[y_1,y_2\leftarrow v]] \rightsquigarrow_c u[x_1,x_2\leftarrow t][y_2,y_2\leftarrow v]$
+ \item $\lambda x.(u[z_1,z_2\leftarrow y]) \rightsquigarrow_c (\lambda x.u)[z_1,z_2\leftarrow y]$
+ \item $u[x_1,x_2\leftarrow z_1][y_1,y_2\leftarrow z_2]=u[x_1,x_2\leftarrow z_1][y_1,y_2\leftarrow z_2]$
+ \item $<v_1,v_2>[x,y\leftarrow z] \rightsquigarrow_c <v_1[x,y\leftarrow z],v_2>, x,y\in\FV(v_1)$
+ \item $<v_1,v_2>[x_1,y_1\leftarrow z_1][x_2,y_2\leftarrow z_2][z_1,z_2\leftarrow q] \rightsquigarrow_c <v_1[x_1,x_2\leftarrow z_1],v_2[y_1,y_2\leftarrow z_2]>[z_1,z_2\leftarrow q], x_1,x_2\in\FV(v_1), y_1,y_2\in\FV(v_2)$
+ \item $<v_1,v_2>[x,y\leftarrow z_1][z_1,z_2\leftarrow q] \rightsquigarrow_c <v_1[x,z_2\leftarrow z_1],v_2>[z_1,y\leftarrow q], x,z_2\in\FV(v_1), y\in\FV(v_2)$
+ \item $u[x_1,x_2\leftarrow (\lambda y.<t_1,t_2>[y_1,y_2\leftarrow y])] \rightsquigarrow_c u\{x_1\leftarrow \lambda y_1.t_1, x_2\leftarrow \lambda y_2.t_2\}$
+ \item $u[x_1,x_2\leftarrow (\lambda y.<t_1,t_2>[\leftarrow y])] \rightsquigarrow_c u\{x_1\leftarrow \lambda y.t_1[\leftarrow y], x_2\leftarrow \lambda y.t_2[\leftarrow y]\}$
+\end{itemize}
+
+%\begin{lemma}
+ If $u\rightsquigarrow_\beta v$, then $\llbracket u\rrbracket \rightsquigarrow_\beta \llbracket v\rrbracket$.
+%\end{lemma}
+
+%\begin{lemma}
+ If $u\rightsquigarrow v$, then $\llbracket u\rrbracket = \llbracket v\rrbracket$
+%\end{lemma}
+
+%\begin{lemma}
+ If $\llbracket u\rrbracket \rightsquigarrow_\beta \llbracket v\rrbracket$ then there exists a $t$, such that $u\rightsquigarrow^\star t$ and $t\rightsquigarrow_\beta v$.
+%\end{lemma}
+
 
 \end{document}
 
